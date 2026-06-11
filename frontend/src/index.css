@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3%;
+    --foreground: 30 15% 92%;
+    --card: 0 0% 5%;
+    --card-foreground: 30 15% 92%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 30 15% 92%;
+    --primary: 25 100% 50%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 30 15% 92%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 25 100% 50%;
+    --accent-foreground: 0 0% 5%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 25 100% 50%;
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --orange: #ff7a00;
+    --orange-dim: rgba(255, 122, 0, 0.15);
+    --orange-glow: rgba(255, 122, 0, 0.4);
+    --surface: #0d0d0d;
+    --surface-2: #141414;
+    --surface-3: #1a1a1a;
+    --text-primary: #ede8e0;
+    --text-secondary: #8a8078;
+    --text-dim: #4a4540;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    background-color: #080808;
+    cursor: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Syne', sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  ::selection {
+    background: rgba(255, 122, 0, 0.3);
+    color: #ede8e0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #080808;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #ff7a00;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff9a30;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    background: linear-gradient(135deg, #ff7a00 0%, #ffb347 50%, #ff7a00 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glow-border {
+    border: 1px solid rgba(255, 122, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 122, 0, 0.1), inset 0 0 20px rgba(255, 122, 0, 0.05);
+  }
+
+  .glow-border:hover {
+    border-color: rgba(255, 122, 0, 0.6);
+    box-shadow: 0 0 30px rgba(255, 122, 0, 0.2), inset 0 0 20px rgba(255, 122, 0, 0.08);
+  }
+
+  .section-heading {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    opacity: 0.8;
+  }
+
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Custom cursor */
+.cursor-dot {
+  width: 5px;
+  height: 5px;
+  background: #ff7a00;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease;
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 122, 0, 0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, transform 0.08s ease, border-color 0.2s ease;
+}
+
+.cursor-ring.hover {
+  width: 50px;
+  height: 50px;
+  border-color: rgba(255, 122, 0, 0.8);
+}
+
+/* Horizontal scroll container */
+.scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}

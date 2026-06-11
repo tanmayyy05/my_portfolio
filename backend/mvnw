@@ -1,0 +1,39 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup script
+# ----------------------------------------------------------------------------
+
+MVNW_VERBOSE="${MVNW_VERBOSE:-}"
+MVNW_USERNAME="${MVNW_USERNAME:-}"
+MVNW_PASSWORD="${MVNW_PASSWORD:-}"
+
+WRAPPER_DIR=".mvn/wrapper"
+WRAPPER_JAR="$WRAPPER_DIR/maven-wrapper.jar"
+WRAPPER_PROPS="$WRAPPER_DIR/maven-wrapper.properties"
+
+if [ -f "$WRAPPER_PROPS" ]; then
+  WRAPPER_URL=$(grep wrapperUrl "$WRAPPER_PROPS" | cut -d'=' -f2-)
+fi
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+  echo "Downloading Maven Wrapper..."
+  if command -v curl > /dev/null; then
+    curl -o "$WRAPPER_JAR" "$WRAPPER_URL"
+  elif command -v wget > /dev/null; then
+    wget -O "$WRAPPER_JAR" "$WRAPPER_URL"
+  else
+    echo "Error: curl or wget required to download Maven Wrapper" >&2
+    exit 1
+  fi
+fi
+
+if [ -z "$JAVA_HOME" ]; then
+  JAVACMD="java"
+else
+  JAVACMD="$JAVA_HOME/bin/java"
+fi
+
+exec "$JAVACMD" \
+  -classpath "$WRAPPER_JAR" \
+  "-Dmaven.multiModuleProjectDirectory=$(pwd)" \
+  org.apache.maven.wrapper.MavenWrapperMain "$@"
