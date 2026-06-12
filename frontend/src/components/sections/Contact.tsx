@@ -49,38 +49,63 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  e.preventDefault()
+  setLoading(true)
 
-    try {
-      // Try backend API first
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/contact`, {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/contact`,
+      {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(form),
+      }
+    )
+
+    console.log('Status:', response.status)
+    console.log('OK:', response.ok)
+
+    const responseText = await response.text()
+    console.log('Response:', responseText)
+
+    if (response.ok) {
+      toast({
+        title: 'Message sent! ✦',
+        description: "Thanks for reaching out. I'll get back to you soon.",
       })
 
-      if (response.ok) {
-        toast({
-          title: 'Message sent! ✦',
-          description: "Thanks for reaching out. I'll get back to you soon.",
-        })
-        setForm({ name: '', email: '', subject: '', message: '' })
-      } else {
-        throw new Error('Server error')
-      }
-    } catch {
-      // Fallback — open mailto
-      const mailtoLink = `mailto:tanmay3011w@gmail.com?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`
-      window.open(mailtoLink)
-      toast({
-        title: 'Opening email client',
-        description: 'Your email client has been opened with the message pre-filled.',
+      setForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
       })
-    } finally {
-      setLoading(false)
+    } else {
+      console.error('Backend Error:', responseText)
+      throw new Error(`Server Error: ${response.status}`)
     }
+  } catch (error) {
+    console.error('Fetch Error:', error)
+
+    const mailtoLink =
+      `mailto:tanmay3011w@gmail.com?subject=${encodeURIComponent(form.subject)}` +
+      `&body=${encodeURIComponent(
+        `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
+      )}`
+
+    window.open(mailtoLink)
+
+    toast({
+      title: 'Opening email client',
+      description:
+        'Your email client has been opened with the message pre-filled.',
+    })
+  } finally {
+    setLoading(false)
   }
+}
 
   const inputClass = "w-full bg-[#111] border border-white/8 rounded-sm px-4 py-3 font-body text-sm text-[#ede8e0]/80 placeholder-[#ede8e0]/20 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30 transition-all duration-200"
 
