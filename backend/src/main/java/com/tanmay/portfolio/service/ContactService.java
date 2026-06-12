@@ -7,8 +7,6 @@ import com.tanmay.portfolio.repository.ContactMessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,7 @@ import java.time.LocalDateTime;
 public class ContactService {
 
     private final ContactMessageRepository contactMessageRepository;
-    private final JavaMailSender mailSender;
+    private final ResendEmailService resendEmailService;
 
     @Value("${app.notification.email:tanmay3011w@gmail.com}")
     private String notificationEmail;
@@ -51,22 +49,19 @@ public class ContactService {
     @Async
     public void sendEmailNotificationAsync(ContactMessage message) {
         try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(notificationEmail);
-            mail.setSubject("Portfolio Contact: " + message.getSubject());
-            mail.setText(
-                "New contact form submission\n\n" +
-                "From: " + message.getName() + " <" + message.getEmail() + ">\n" +
-                "Subject: " + message.getSubject() + "\n\n" +
-                "Message:\n" + message.getMessage() + "\n\n" +
-                "---\n" +
-                "IP: " + message.getIpAddress() + "\n" +
-                "Time: " + message.getCreatedAt()
+
+            resendEmailService.sendContactEmail(
+                    notificationEmail,
+                    message.getName(),
+                    message.getEmail(),
+                    message.getSubject(),
+                    message.getMessage()
             );
-            mailSender.send(mail);
+
             log.info("Email notification sent for message id={}", message.getId());
+
         } catch (Exception e) {
-            log.warn("Failed to send email notification for message id={}: {}", message.getId(), e.getMessage());
+            log.error("Failed to send email notification for message id={}", message.getId(), e);
         }
     }
 
